@@ -30,7 +30,7 @@ public class PageResult<T> extends Result<T> {
     }
 
     /**
-     * 分页查血结果反馈
+     * 分页查询结果反馈
      *
      * @param data  数据源
      * @param total 总记录数

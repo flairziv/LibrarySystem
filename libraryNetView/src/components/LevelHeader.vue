@@ -9,12 +9,15 @@
         </div>
         
         <div class="header-right">
+            <!-- 下拉菜单组件，点击用户头像区域显示"个人资料"和"退出登录"选项 -->
             <el-dropdown trigger="click">
+                 <!-- 触发器：点击显示下拉菜单 -->
                 <div class="user-profile">
                     <el-avatar :size="32" :src="userInfo.url"></el-avatar>
                     <span class="username">{{ userInfo.name }}</span>
                     <el-icon><ArrowDown /></el-icon>
                 </div>
+                <!-- 下拉内容：菜单项 -->
                 <template #dropdown>
                     <el-dropdown-menu>
                         <el-dropdown-item @click="userCenterPanel">
@@ -31,7 +34,7 @@
 </template>
 
 <script>
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref } from 'vue'
 import { 
     Expand, 
     Fold, 

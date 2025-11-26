@@ -6,6 +6,7 @@
                 <Logo name="书海智控台" :flag="flag" :bag="colorLogo" />
             </div>
             <div class="menu-wrapper">
+                <!-- @select监听子组件handleSelect方法中emit('select', activeIndex.value)传递过来的参数 -->
                 <AdminMenu :flag="flag" :routes="adminRoutes" :bag="bagMenu" @select="handleRouteSelect" />
             </div>
         </div>
@@ -78,7 +79,6 @@
 
 <script>
 import { ref, reactive, onMounted, watch, getCurrentInstance } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
 import request from "@/utils/request.js"
 import { clearToken } from "@/utils/storage"
 import AdminMenu from '@/components/VerticalMenu.vue'
@@ -99,8 +99,6 @@ export default {
     },
     setup() {
         const { proxy } = getCurrentInstance()
-        const router = useRouter()
-        const route = useRoute()
         
         // 响应式数据
         const adminRoutes = ref([])
@@ -250,6 +248,7 @@ export default {
         }
         
         // 选择菜单项
+        // 这里的path参数内容是子组件传递的emit('select', activeIndex.value)
         const handleRouteSelect = (path) => {
             if (proxy.$route.path === path) return
             
@@ -274,6 +273,7 @@ export default {
                 
                 // 设置用户信息
                 const { id, userAvatar: url, userName: name, userRole: role, userEmail: email } = res.data.data
+                // 保持响应式 批量更新响应式对象 userInfo 的属性值，等价于userInfo.id = id、userInfo.url = url、userInfo.name = name、userInfo.role = role、userInfo.email = email
                 Object.assign(userInfo, { id, url, name, role, email })
                 
                 // 验证用户角色
@@ -372,15 +372,15 @@ export default {
     background-color: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    display: flex;
-    flex-direction: column;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10;
-    flex-shrink: 0;
-    border-radius: 0 16px 16px 0;
-    overflow: hidden;
-    margin-right: 0;
-    position: relative;
+    display: flex;  /* 使用 flex 布局，便于内部纵向排列 */
+    flex-direction: column;  /* 子元素垂直排列（从上到下） */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);  /* 过渡动画，all：监听所有可过渡的 CSS 属性变化 0.3s：动画持续时间 0.3 秒 开始时加速（0.4 控制）中间匀速 结束时减速（0.2, 1 控制）*/
+    z-index: 10;  /* 提高层级，确保位于主要内容之上 */
+    flex-shrink: 0;  /* 在 flex 容器中不允许收缩，保持设定宽度 */
+    border-radius: 0 16px 16px 0;  /* 右上与右下圆角，从左上角开始顺时针转动 */
+    overflow: hidden;  /* 隐藏溢出内容，配合圆角避免内容溢出显示 */
+    margin-right: 0px;  /* 右侧外边距为0 */
+    position: relative;  /* 相对定位以便内部绝对定位元素参照该容器 */
 }
 
 .sidebar-collapsed {

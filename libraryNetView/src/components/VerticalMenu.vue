@@ -1,7 +1,15 @@
+<!--1. :collapse-transition="false" 作用：禁用折叠动画过渡效果
+    2. :collapse="flag" 作用：控制菜单的折叠/展开状态
+    3. class="admin-menu" 作用：绑定静态 CSS 类名
+    4. :default-active="currentRoute" 作用：设置当前激活的菜单项
+    5. :background-color="bag" 作用：设置菜单背景色
+    6. text-color="#333" 作用：设置菜单文字颜色
+    7. @select="handleSelect" 作用：监听菜单项选择事件 -->
 <template>
 	<el-menu :collapse-transition="false" :collapse="flag" class="admin-menu"
 		:default-active="currentRoute" :background-color="bag" text-color="#333" @select="handleSelect">
-		<template v-for="(item, index) in routes" :key="index">
+		<!-- index从0开始，routes是item的data即父组件传过来的value -->
+        <template v-for="(item, index) in routes" :key="index">
 			<el-menu-item v-if="shouldShowItem(item)" :index="item.path"
 				:class="isActive(item.path)">
 				<el-icon v-if="item.icon">
@@ -13,7 +21,7 @@
 	</el-menu>
 </template>
 <script>
-import { ref, computed, onMounted, defineProps, defineEmits, getCurrentInstance } from 'vue'
+import { ref, computed, onMounted, getCurrentInstance } from 'vue'
 import { 
 	DataAnalysis, 
 	User, 
@@ -31,6 +39,34 @@ import {
 	Collection,
 	DocumentRemove
 } from '@element-plus/icons-vue'
+
+// props: {
+    //     routes: { 
+    //         required: true    // 父组件必须传递，否则报警告
+    //     },
+    //     bag: { 
+    //         required: false   // 可选，父组件可以不传
+    //     },
+    //     bag: { 
+    //         type: String,
+    //         default: 'transparent'  // 父组件不传时使用此默认值
+    //     },
+    //     count: {
+    //         type: Number,
+    //         default: 0
+    //     },
+    //     options: {
+    //         type: Object,
+    //         default: () => ({})  // 对象/数组必须用函数返回
+    //     },
+    //     status: {
+    //         type: String,
+    //         validator: (value) => {
+    //             // 只允许这三个值
+    //             return ['success', 'warning', 'error'].includes(value)
+    //         }
+    //     },
+    // },
 
 export default {
 	name: 'AdminMenu',
@@ -51,7 +87,7 @@ export default {
 		Collection,
 		DocumentRemove
 	},
-	props: {
+    props: {
 		routes: {
 			type: Array,
 			required: true
@@ -65,6 +101,7 @@ export default {
 			default: 'transparent'
 		}
 	},
+    // 告诉 Vue："我这个组件会触发 select 事件"
 	emits: ['select'],
 	setup(props, { emit }) {
 		const { proxy } = getCurrentInstance()
@@ -74,6 +111,7 @@ export default {
 
 		// 添加调试
 		console.log('VerticalMenu props.routes:', props.routes)
+        console.log('VerticalMenu props.routes:', props)
 
 		// 计算属性：获取当前路由路径
 		const currentRoute = computed(() => {
@@ -89,10 +127,24 @@ export default {
 			}
 		}
 
-		// 处理菜单选择
+        /*  处理菜单选择
+
+            用户点击菜单项
+                ↓
+            Element Plus 触发 select 事件
+            emit('select', index, indexPath, item)
+                ↓
+            调用 handleSelect 方法
+            handleSelect(index)
+                ↓
+            执行自定义逻辑
+
+            Element Plus 内部触发 this.$emit('select', index, indexPath, item)
+        */
 		const handleSelect = (index) => {
 			activeIndex.value = index
 			justSelectedPath.value = index
+            // 实际触发 select 事件，传递数据
 			emit('select', activeIndex.value)
 			sessionStorage.setItem('activeMenuItem', activeIndex.value)
 			
