@@ -72,8 +72,8 @@
 <script>
 import { ref, onMounted, getCurrentInstance } from 'vue'
 import { Refresh, Bell, Timer, InfoFilled } from '@element-plus/icons-vue'
-import LineChart from "@/components/LineChart"
-import PieChart from "@/components/PieChart"
+import LineChart from "@/components/LineChart.vue"
+import PieChart from "@/components/PieChart.vue"
 
 export default {
     components: { 

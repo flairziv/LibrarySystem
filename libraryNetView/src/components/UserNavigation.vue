@@ -2,7 +2,7 @@
   <div class="menu-side" :class="{ 'menu-side-narrow': isCollapsed }">
     <!-- 顶部Logo区域 -->
     <div class="logo-container">
-      <img src="/Logo2.png" class="logo-image">
+      <img src="/logo2.png" class="logo-image">
       <div class="logo-text">悦读空间</div>
       <div class="collapse-btn" @click="toggleCollapse">
         <el-icon>
